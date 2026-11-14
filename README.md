@@ -8,10 +8,6 @@ Companion projects for building and evaluating Snowflake Business Ontology (BON)
 
 Each project lives in its own folder with its own README, so new projects can be added alongside `getting-started/`.
 
-## Origin
-
-The getting-started project builds on Business Ontology demo work by Tianxia Jia and Chanin Nantasenamat. See its [README](getting-started/README.md) for setup, the benchmark and known limits.
-
 ## License
 
 Apache-2.0. See [LICENSE](LICENSE).
