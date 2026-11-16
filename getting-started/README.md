@@ -2,14 +2,14 @@
 
 A fair, repeatable test of what **Snowflake Business Ontology (BON)** adds on top of **well-built semantic views**. It uses a realistic SAP supply-chain dataset with three domains: Procurement, Finance & Controlling, and Sales & Distribution.
 
-Two Cortex Agents are compared. They are identical except for one tool:
+Two Cortex Agents (`ENRICHED_AGENT` and `BON_AGENT`) are compared:
 
 | Arm | Agent | Context |
 |---|---|---|
 | **B** | `ENRICHED_AGENT` | 3 enriched domain semantic views (metrics, synonyms, code values, instructions, verified queries) |
 | **C** | `BON_AGENT` | the same 3 semantic views **+ native Business Ontology search** (`snowscope_search`, `businessOntology` corpus) |
 
-The two agents share the model, budget (150 s / 40k tokens), response instructions and tool descriptions. **BON uplift = C - B.**
+Both agents (`ENRICHED_AGENT` and `BON_AGENT`) use the same enriched semantic views, model setting and budget (150 s / 40k tokens). `BON_AGENT` additionally uses ontology search and instructions to apply and cite governed definitions. **BON uplift = C - B** compares these combined configurations, not the search tool alone.
 
 > **Building your own ontology?** See the [Getting Started with Business Ontology guide](https://github.com/sfc-gh-cnantasenamat/sfguide-getting-started-with-business-ontology): what goes in a semantic view vs Business Ontology, ten build phases with copy-paste `$business-ontology` prompts, agent setup, and how to evaluate uplift.
 
@@ -135,7 +135,7 @@ The [guide](https://github.com/sfc-gh-cnantasenamat/sfguide-getting-started-with
 
 ### 2. Wait for the search index, then benchmark
 
-Ontology edits can take **up to about 6 hours** to become searchable, and deleted terms can keep being served for longer.
+In our trials, terms were first observed as searchable approximately 5 to 14 hours after the final ontology write. These are observation times, not guaranteed indexing durations. Confirm readiness with the search checks before proceeding. Deleted terms can also keep appearing until the index refreshes.
 
 ```bash
 SNOWFLAKE_CONNECTION_NAME=<conn> python -u benchmark/run_benchmark.py --check-index
@@ -193,7 +193,7 @@ Streamlit app ──▶ DATA_AGENT_RUN()
 - **Search results:**
   - Native BON search returns definitions, formulas and synonyms. It does **not** return relationships or representations.
   - Any link the agent must follow, such as the SV metric that implements a term or a cross-domain bridge, must also be written in the definition text.
-- **Index freshness:** search reflects ontology edits and grants only after an index refresh. That can take up to about 6 hours, and deletions take longer to disappear.
+- **Index freshness:** search reflects ontology edits and grants only after an index refresh. In our trials, terms were first observed as searchable approximately 5 to 14 hours after the final ontology write. These are observation times, not guaranteed indexing durations. Confirm readiness with the search checks; deleted terms can remain visible until the index refreshes.
 - **Search scope:** search covers every domain your role can read across the account. Other projects' terms can appear, so the agent is told which domains to prefer.
 - **Not yet available through the API:**
   - You can't set owners and stewards through the API, so stewardship is recorded in the domain descriptions.
